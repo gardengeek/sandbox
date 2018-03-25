@@ -101,4 +101,30 @@ RSpec.describe 'Companies', type: :request do
       expect(response).to have_http_status(200)
     end
   end
+
+  describe 'GET /companies/created_last_month' do
+    before do
+      Company.create(name: 'Foo', plan_level: Company::PLAN_LEVELS.sample, created_at: 1.month.ago.beginning_of_month)
+      Company.create(name: 'Bar', plan_level: Company::PLAN_LEVELS.sample, created_at: 1.month.ago.end_of_month)
+      Company.create(name: 'bax', plan_level: Company::PLAN_LEVELS.sample, created_at: 2.months.ago)
+      Company.create(name: 'Baz', plan_level: Company::PLAN_LEVELS.sample, created_at: Date.today.beginning_of_month)
+      Company.create(name: 'Baz', plan_level: Company::PLAN_LEVELS.sample)
+      expect(Company.all.size).to eq 5
+
+      get '/companies/created_last_month'
+    end
+
+    it 'returns data for all companies that were created last month' do
+      json = JSON.parse(response.body)
+      expect(json).to_not be_empty
+
+      company_data = json['data']
+      expect(company_data.size).to eq 2
+      expect(company_data.map { |hash| hash['name'] }).to match_array(['Foo', 'Bar'])
+    end
+
+    it 'returns status code 200' do
+      expect(response).to have_http_status(200)
+    end
+  end
 end

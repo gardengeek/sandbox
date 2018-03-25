@@ -18,5 +18,9 @@ RSpec.describe CompaniesController, type: :routing do
     it 'routes to #not_trialing' do
       expect(get: '/companies/not_trialing').to route_to('companies#not_trialing')
     end
+
+    it 'routes to #created_last_month' do
+      expect(get: '/companies/created_last_month').to route_to('companies#created_last_month')
+    end
   end
 end

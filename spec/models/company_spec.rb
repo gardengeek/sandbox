@@ -95,5 +95,18 @@ RSpec.describe Company, type: :model do
         expect(Company.not_trialing.map(&:name)).to match_array(['Foo', 'Bar'])
       end
     end
+
+    describe '.created_last_month' do
+      it 'returns companies that were created last month' do
+        Company.create(name: 'Foo', plan_level: Company::PLAN_LEVELS.sample, created_at: 1.month.ago.beginning_of_month)
+        Company.create(name: 'Bar', plan_level: Company::PLAN_LEVELS.sample, created_at: 1.month.ago.end_of_month)
+        Company.create(name: 'bax', plan_level: Company::PLAN_LEVELS.sample, created_at: 2.months.ago)
+        Company.create(name: 'Baz', plan_level: Company::PLAN_LEVELS.sample, created_at: Date.today.beginning_of_month)
+        Company.create(name: 'Baz', plan_level: Company::PLAN_LEVELS.sample)
+        expect(Company.all.size).to eq 5
+
+        expect(Company.created_last_month.map(&:name)).to match_array(['Foo', 'Bar'])
+      end
+    end
   end
 end

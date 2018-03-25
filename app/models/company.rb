@@ -11,4 +11,5 @@ class Company < ApplicationRecord
   scope :alphabetically, -> { order('name collate NOCASE') }
   scope :modern_plan_levels, -> { where('plan_level IN (?)', MODERN_PLAN_LEVELS) }
   scope :not_trialing, -> { where('trial_ends_on is null or trial_ends_on < ?', Date.today) }
+  scope :created_last_month, -> { where('created_at between ? and ?', 1.month.ago.beginning_of_month, 1.month.ago.end_of_month) }
 end
