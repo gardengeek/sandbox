@@ -14,5 +14,9 @@ RSpec.describe CompaniesController, type: :routing do
     it 'routes to with_modern_plan' do
       expect(get: '/companies/with_modern_plan').to route_to('companies#with_modern_plan')
     end
+
+    it 'routes to #not_trialing' do
+      expect(get: '/companies/not_trialing').to route_to('companies#not_trialing')
+    end
   end
 end

@@ -14,4 +14,9 @@ class CompaniesController < ApplicationController
   def with_modern_plan
     render json: { data: Company.modern_plan_levels }
   end
+
+  # GET /companies/not_trialing
+  def not_trialing
+    render json: { data: Company.not_trialing }
+  end
 end

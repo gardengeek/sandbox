@@ -75,4 +75,30 @@ RSpec.describe 'Companies', type: :request do
       expect(response).to have_http_status(200)
     end
   end
+
+  describe 'GET /companies/not_trialing' do
+    before do
+      Company.create(name: 'Foo', plan_level: Company::PLAN_LEVELS.sample, trial_ends_on: 2.days.ago.to_date)
+      Company.create(name: 'Bar', plan_level: Company::PLAN_LEVELS.sample, trial_ends_on: nil)
+      Company.create(name: 'Baz', plan_level: Company::PLAN_LEVELS.sample, trial_ends_on: 5.days.from_now.to_date)
+      Company.create(name: 'Bax', plan_level: Company::PLAN_LEVELS.sample, trial_ends_on: 2.days.from_now.to_date)
+      Company.create(name: 'Qux', plan_level: Company::PLAN_LEVELS.sample, trial_ends_on: Date.today)
+      expect(Company.all.size).to eq 5
+
+      get '/companies/not_trialing'
+    end
+
+    it 'returns data for all companies that are not actively trialing' do
+      json = JSON.parse(response.body)
+      expect(json).to_not be_empty
+
+      company_data = json['data']
+      expect(company_data.size).to eq 2
+      expect(company_data.map { |hash| hash['name'] }).to match_array(['Foo', 'Bar'])
+    end
+
+    it 'returns status code 200' do
+      expect(response).to have_http_status(200)
+    end
+  end
 end

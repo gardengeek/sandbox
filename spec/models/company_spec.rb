@@ -79,7 +79,20 @@ RSpec.describe Company, type: :model do
         Company.create(name: 'modern_3', plan_level: Company::MODERN_PLAN_LEVELS.sample)
         Company.create(name: 'not_modern_6', plan_level: 'custom')
         Company.create(name: 'not_modern_7', plan_level: 'legacy')
+
         expect(Company.modern_plan_levels.map(&:name)).to match_array(['modern_1', 'modern_2', 'modern_3'])
+      end
+    end
+
+    describe '.not_trialing' do
+      it 'returns companies with a trial_ends_on of nil or in the past' do
+        Company.create(name: 'Foo', plan_level: Company::PLAN_LEVELS.sample, trial_ends_on: 2.days.ago.to_date)
+        Company.create(name: 'Bar', plan_level: Company::PLAN_LEVELS.sample, trial_ends_on: nil)
+        Company.create(name: 'Baz', plan_level: Company::PLAN_LEVELS.sample, trial_ends_on: 5.days.from_now.to_date)
+        Company.create(name: 'Bax', plan_level: Company::PLAN_LEVELS.sample, trial_ends_on: 2.days.from_now.to_date)
+        Company.create(name: 'Qux', plan_level: Company::PLAN_LEVELS.sample, trial_ends_on: Date.today)
+
+        expect(Company.not_trialing.map(&:name)).to match_array(['Foo', 'Bar'])
       end
     end
   end
