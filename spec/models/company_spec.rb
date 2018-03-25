@@ -59,4 +59,17 @@ RSpec.describe Company, type: :model do
       end
     end
   end
+
+  describe 'scopes' do
+    describe '.alphabetically' do
+      it 'sorts alphabetically by name' do
+        Company.create(name: 'Foo', plan_level: Company::PLAN_LEVELS[1])
+        Company.create(name: 'Bar', plan_level: Company::PLAN_LEVELS[0])
+        Company.create(name: 'bax', plan_level: Company::PLAN_LEVELS[3])
+        Company.create(name: 'Baz', plan_level: Company::PLAN_LEVELS[2])
+
+        expect(Company.alphabetically.map(&:name)).to eq ['Bar', 'bax', 'Baz', 'Foo']
+      end
+    end
+  end
 end

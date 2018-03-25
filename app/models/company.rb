@@ -6,4 +6,6 @@ class Company < ApplicationRecord
   validates :name, :plan_level, presence: true
   validates :name, length: { in: 3...255 }
   validates :plan_level, inclusion: { in: PLAN_LEVELS }
+
+  scope :alphabetically, -> { order('name collate NOCASE') }
 end

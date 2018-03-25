@@ -23,4 +23,30 @@ RSpec.describe 'Companies', type: :request do
       expect(response).to have_http_status(200)
     end
   end
+
+  describe 'GET /companies/alphabetically' do
+    before do
+      Company.create(name: 'Foo', plan_level: Company::PLAN_LEVELS.sample)
+      Company.create(name: 'Bar', plan_level: Company::PLAN_LEVELS.sample)
+      Company.create(name: 'Baz', plan_level: Company::PLAN_LEVELS.sample)
+      expect(Company.all.size).to eq 3
+
+      get '/companies/alphabetically'
+    end
+
+    it 'returns data for all companies' do
+      json = JSON.parse(response.body)
+      expect(json).to_not be_empty
+
+      company_data = json['data']
+      expect(company_data.size).to eq 3
+      expect(company_data[0]['name']).to eq 'Bar'
+      expect(company_data[1]['name']).to eq 'Baz'
+      expect(company_data[2]['name']).to eq 'Foo'
+    end
+
+    it 'returns status code 200' do
+      expect(response).to have_http_status(200)
+    end
+  end
 end
