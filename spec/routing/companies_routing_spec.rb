@@ -10,5 +10,9 @@ RSpec.describe CompaniesController, type: :routing do
     it 'routes to #alphabetical' do
       expect(get: '/companies/alphabetically').to route_to('companies#alphabetically')
     end
+
+    it 'routes to with_modern_plan' do
+      expect(get: '/companies/with_modern_plan').to route_to('companies#with_modern_plan')
+    end
   end
 end

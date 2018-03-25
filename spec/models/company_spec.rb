@@ -71,5 +71,16 @@ RSpec.describe Company, type: :model do
         expect(Company.alphabetically.map(&:name)).to eq ['Bar', 'bax', 'Baz', 'Foo']
       end
     end
+
+    describe '.modern_plan_levels' do
+      it 'returns companies with modern plan levels' do
+        Company.create(name: 'modern_2', plan_level: Company::MODERN_PLAN_LEVELS.sample)
+        Company.create(name: 'modern_1', plan_level: Company::MODERN_PLAN_LEVELS.sample)
+        Company.create(name: 'modern_3', plan_level: Company::MODERN_PLAN_LEVELS.sample)
+        Company.create(name: 'not_modern_6', plan_level: 'custom')
+        Company.create(name: 'not_modern_7', plan_level: 'legacy')
+        expect(Company.modern_plan_levels.map(&:name)).to match_array(['modern_1', 'modern_2', 'modern_3'])
+      end
+    end
   end
 end
