@@ -34,7 +34,7 @@ RSpec.describe 'Companies', type: :request do
       get '/companies/alphabetically'
     end
 
-    it 'returns data for all companies' do
+    it 'returns data for all companies, sorted alphabetically' do
       json = JSON.parse(response.body)
       expect(json).to_not be_empty
 
