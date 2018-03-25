@@ -67,6 +67,7 @@ RSpec.describe Company, type: :model do
         Company.create(name: 'Bar', plan_level: Company::PLAN_LEVELS[0])
         Company.create(name: 'bax', plan_level: Company::PLAN_LEVELS[3])
         Company.create(name: 'Baz', plan_level: Company::PLAN_LEVELS[2])
+        expect(Company.all.size).to eq 4
 
         expect(Company.alphabetically.map(&:name)).to eq ['Bar', 'bax', 'Baz', 'Foo']
       end
@@ -79,6 +80,7 @@ RSpec.describe Company, type: :model do
         Company.create(name: 'modern_3', plan_level: Company::MODERN_PLAN_LEVELS.sample)
         Company.create(name: 'not_modern_6', plan_level: 'custom')
         Company.create(name: 'not_modern_7', plan_level: 'legacy')
+        expect(Company.all.size).to eq 5
 
         expect(Company.modern_plan_levels.map(&:name)).to match_array(['modern_1', 'modern_2', 'modern_3'])
       end
@@ -91,6 +93,7 @@ RSpec.describe Company, type: :model do
         Company.create(name: 'Baz', plan_level: Company::PLAN_LEVELS.sample, trial_ends_on: 5.days.from_now.to_date)
         Company.create(name: 'Bax', plan_level: Company::PLAN_LEVELS.sample, trial_ends_on: 2.days.from_now.to_date)
         Company.create(name: 'Qux', plan_level: Company::PLAN_LEVELS.sample, trial_ends_on: Date.today)
+        expect(Company.all.size).to eq 5
 
         expect(Company.not_trialing.map(&:name)).to match_array(['Foo', 'Bar'])
       end
